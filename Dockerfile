@@ -3,7 +3,8 @@ FROM python:3-slim-buster
 ENV DEBIAN_FRONTEND=noninteractive
 ENV MEGA_SDK_VERSION '3.8.3a'
 
-RUN apt-get -qq update \
+RUN set -xe \
+    && apt-get -qq update \
     && apt-get -qq install -y --no-install-recommends \
         git g++ gcc autoconf automake \
         m4 libtool qt4-qmake make libqt4-dev libcurl4-openssl-dev \
@@ -17,5 +18,5 @@ RUN apt-get -qq update \
     && ./autogen.sh && ./configure --disable-silent-rules --enable-python --with-sodium --disable-examples \
     && make -j$(nproc --all) \
     && cd bindings/python/ && python3 setup.py bdist_wheel \
-    && cd dist/ && pip3 install --no-cache-dir megasdk-$MEGA_SDK_VERSION-*.whl \
+    && cd dist/ && ls -lAog && pip3 install --no-cache-dir megasdk-*.whl \
     && cd /tmp && rm -rf sdk
